@@ -3,10 +3,21 @@ import { useEffect, useState } from "react";
 export default function Blog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [blogs, setBlogs] = useState([]);
 
   function handleSubmit(e){
     e.preventDefault();
-    
+
+    // Create a new blog object with the current title and content
+    const newBlog = { title, content };
+
+    // Use spread operator to add the new blog to the beginning of the array
+    setBlogs([newBlog, ...blogs]);
+    console.log(blogs);
+
+     // Clear the input fields after submitting the blog
+     setTitle("");
+     setContent("");
   }
 
   return (
@@ -35,8 +46,13 @@ export default function Blog() {
       <hr />
 
       <h2>Blogs</h2>
-      <h3>{title}</h3>
-      <p>{content}</p>
+      {blogs.map((blog, index) => (
+        <div className="blog" key={index}>
+          <h3>{blog.title}</h3>
+          <p>{blog.content}</p>
+          <hr />
+        </div>
+      ))}
     </>
   );
 }
