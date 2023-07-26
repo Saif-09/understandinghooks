@@ -1,4 +1,4 @@
-import Input from "./Components/inputWithFunction";
+import Input from "./Components/BlogComponent";
 
 function App() {
   return (

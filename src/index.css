@@ -48,6 +48,7 @@
 
 
 label{
+  
   display: block;
   padding: 2px;
 }
@@ -64,6 +65,7 @@ h1{
   font-family:Georgia, 'Times New Roman', Times, serif;
   text-align: center;
   margin-top: 10px;
+  font-size: 6vw;
 }
 
 .btn{
@@ -74,8 +76,8 @@ h1{
   width: 80px;
   height: 30px;
   font-size: 15px;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
-
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
 }
 
 .remove{
