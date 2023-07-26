@@ -19,6 +19,22 @@ import React from "react";
         })
     }
 
+    componentDidMount(){
+        document.title=this.state.name+" "+this.state.lastName;
+
+        this.timer = setInterval(()=>{
+            console.log("window width: ", window.innerWidth)
+        },2000)
+    }
+    componentDidUpdate(){
+        document.title = this.state.name+" "+this.state.lastName
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.timer);
+    }
+
+
     render(){
         return(
             <>

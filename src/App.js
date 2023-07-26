@@ -1,4 +1,4 @@
-import Input from "./Components/inputWithClass";
+import Input from "./Components/inputWithFunction";
 
 function App() {
   return (
