@@ -2,7 +2,7 @@
   padding: 15px;
   padding-left: 15px;
   margin:auto;
-  max-width: 60%;
+  max-width: 400px;
  background-color: rgb(110, 212, 104);
  color: white;
  border-radius: 10px;
@@ -30,7 +30,7 @@
 }
 .input{
   min-height: 34px;
-  width: 80%;
+  width: 100%;
   padding-top: 7px;
   padding-bottom: 7px;
   padding-left: 1em;

@@ -1,19 +1,53 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useReducer } from "react";
+
+function blogsReducer(state,action){
+  switch(action.type){
+    case "Add":
+      return [action.blog, ...state];
+
+      case "remove":
+        return state.filter((blog,index)=> index!==action.index);
+
+      default :
+       return[];
+      
+  }
+
+}
 
 export default function Blog() {
   const [formData, setFormData] = useState({ title: "", content: "" });
-  const [blogs, setBlogs] = useState([]);
+  // const [blogs, setBlogs] = useState([]);[]
+  const[blogs, dispatch] = useReducer(blogsReducer,[] )
 
   const titleRef = useRef(null);
+
+  useEffect(()=>{
+    titleRef.current.focus();
+    titleRef.current.style.width = "20vw"
+
+  },[]);
+
+  useEffect(()=>{
+    if(blogs.length && blogs[0].title){
+      document.title = blogs[0].title
+    }else{
+      document.title = "No blogs"
+    }
+  },[blogs]);
 
   function handleSubmit(e) {
     e.preventDefault();
 
     // Create a new blog object with the current title and content
-    const newBlog = { title: formData.title, content: formData.content };
+    // const newBlog = { title: formData.title, content: formData.content };
 
     // Use spread operator to add the new blog to the beginning of the array
-    setBlogs([newBlog, ...blogs]);
+    // setBlogs([newBlog, ...blogs]);
+    dispatch({
+      type:"Add",
+      blog: { title: formData.title, content: formData.content }
+    })
     console.log(blogs);
 
     // Clear the input fields after submitting the blog
@@ -26,7 +60,11 @@ export default function Blog() {
     // Create a copy of the blogs array and remove the blog at the specified index
     const updatedBlogs = [...blogs];
     updatedBlogs.splice(index, 1);
-    setBlogs(updatedBlogs);
+    // setBlogs(updatedBlogs);
+    dispatch({
+      type:'remove',
+      index: index
+    })
   }
 
   return (
@@ -39,6 +77,7 @@ export default function Blog() {
               placeholder="Enter the Title here.."
               value={formData.title}
               ref = {titleRef}
+              required
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
           </InputField>
@@ -47,10 +86,11 @@ export default function Blog() {
               className="content"
               placeholder="Content goes here..."
               value={formData.content}
+              required
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
             />
           </InputField>
-          <button className="btn">Add</button>
+          <button className="btn" >Add</button>
         </form>
       </div>
       <hr />
