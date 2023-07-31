@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Blog() {
   const [formData, setFormData] = useState({ title: "", content: "" });
   const [blogs, setBlogs] = useState([]);
+
+  const titleRef = useRef(null);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -16,6 +18,8 @@ export default function Blog() {
 
     // Clear the input fields after submitting the blog
     setFormData({ title: "", content: "" });
+
+    titleRef.current.focus()
   }
 
   function handleRemove(index) {
@@ -34,6 +38,7 @@ export default function Blog() {
             <input
               placeholder="Enter the Title here.."
               value={formData.title}
+              ref = {titleRef}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
           </InputField>
