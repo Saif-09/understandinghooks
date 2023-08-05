@@ -1,11 +1,13 @@
+import {db} from '../firebase';
 import { useState, useRef, useEffect, useReducer } from "react";
+import {collection, addDoc, getDocs} from "firebase/firestore";
 
 function blogsReducer(state,action){
   switch(action.type){
-    case "Add":
+    case "ADD":
       return [action.blog, ...state];
 
-      case "remove":
+      case "REMOVE":
         return state.filter((blog,index)=> index!==action.index);
 
       default :
@@ -36,7 +38,47 @@ export default function Blog() {
     }
   },[blogs]);
 
-  function handleSubmit(e) {
+  // useEffect(() => {
+  //   getDocs(collection(db, 'blogs'))
+  //     .then((snapshot) => {
+  //       snapshot.docs.forEach((doc) => dispatch({
+  //         type: 'Add',
+  //         data: {
+  //           ...(doc.data()),
+  //           uid: doc.id
+  //         }
+  //       }))
+  //     }).catch((err) => { console.error("Error getting documents:", err) })
+  // }, [])
+
+  useEffect(() => {
+
+    async function fetchData() {
+      try {
+        const snapshot = await getDocs(collection(db, 'blogs'));
+        console.log(snapshot);
+        const blogs = snapshot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data()
+          }
+        });
+        dispatch({
+          type: 'ADD',
+          blog: blogs
+        })
+      }
+      catch {
+        alert('Failed To Fetch Data');
+      }
+
+    }
+    fetchData();
+  }, [])
+
+
+
+  async function handleSubmit(e) {
     e.preventDefault();
 
     // Create a new blog object with the current title and content
@@ -44,9 +86,14 @@ export default function Blog() {
 
     // Use spread operator to add the new blog to the beginning of the array
     // setBlogs([newBlog, ...blogs]);
-    dispatch({
-      type:"Add",
-      blog: { title: formData.title, content: formData.content }
+    // dispatch({
+    //   type:"Add",
+    //   blog: { title: formData.title, content: formData.content }
+    // })
+    const docRef = await addDoc(collection(db, 'blogs'),{
+      title :formData.title,
+      content: formData.content,
+      createdAt: new Date()
     })
     console.log(blogs);
 
@@ -62,7 +109,7 @@ export default function Blog() {
     updatedBlogs.splice(index, 1);
     // setBlogs(updatedBlogs);
     dispatch({
-      type:'remove',
+      type:'REMOVE',
       index: index
     })
   }
