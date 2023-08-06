@@ -1,96 +1,123 @@
-.section{
+.blog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.section {
   padding: 15px;
-  padding-left: 15px;
-  margin:auto;
-  max-width: 400px;
- background-color: rgb(110, 212, 104);
- color: white;
- border-radius: 10px;
- font-weight: bolder;
- font-family: Georgia, 'Times New Roman', Times, serif;
- display:block;
- align-self: center;
-    
-}
-
-.blog{
-  max-width: 60%;
-  background-color: rgb(192, 237, 236);
-  color: black;
-  font-weight: lighter;
-  border: 1px black solid;
-  margin:auto;
-  margin-bottom: 10px;
-  border-radius: 4px;
+  margin-bottom: 20px;
+  background-color: #3a6b72;
+  color: white;
+  border-radius: 10px;
+  font-weight: bold;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  display:block;
-  padding-left: 10px;
-  max-width: 60%;
-
-}
-.input{
-  min-height: 34px;
   width: 100%;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  padding-left: 1em;
-  margin-bottom: 2;
-  display: inline-block;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.content{
+.content {
   height: 100px;
+  resize: vertical;
 }
 
-
-label{
-  
+label {
   display: block;
-  padding: 2px;
+  padding: 5px;
+  font-weight: bold;
 }
 
-h2{
- font-family:Georgia, 'Times New Roman', Times, serif;
- color: rgb(98, 0, 255);
- text-align: center;
- margin-top: 10px;
-
-}
-
-h1{
-  font-family:Georgia, 'Times New Roman', Times, serif;
+h1 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
   text-align: center;
   margin-top: 10px;
-  font-size: 6vw;
+  font-size: 3rem;
+  color: #3a6b72;
 }
 
-.btn{
+h2 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #3a6b72;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn {
   border-radius: 5px;
-  background-color: rgb(68, 68, 243);
+  background-color: #3a6b72;
   color: white;
-  border-style: none;
-  width: 80px;
-  height: 30px;
-  font-size: 15px;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  
+  border: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.remove{
-  background-color: rgb(230, 83, 83);
-  width:fit-content
+.btn:hover {
+  background-color: #274b4f;
 }
 
-.blog-btn{
-  text-align: end;
-  margin-right: 10px;
+.remove {
+  background-color: #cf4242;
 }
-/* Created with https://www.css-gradient.com */
-/* background: #565318;
-background: -webkit-linear-gradient(right, #565318, #3C464E);
-background: -moz-linear-gradient(right, #565318, #3C464E);
-background: linear-gradient(to left, #565318, #3C464E); */
+
+.blog {
+  width: 100%;
+  background-color: white;
+  color: #3a6b72;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.blog h3 {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.blog p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.blog button {
+  background-color: #cf4242;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.blog button:hover {
+  background-color: #b62d2d;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}
