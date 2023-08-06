@@ -54,10 +54,6 @@ export default function Blog() {
   async function handleRemove(id) {
     // Remove the blog from the Firestore database
     await deleteDoc(doc(db, 'blogs', id));
-    // Create a copy of the blogs array and remove the blog at the specified index
-    // const updatedBlogs = [...blogs];
-    // updatedBlogs.splice(index, 1);
-    // setBlogs(updatedBlogs);
   }
 
   return (
