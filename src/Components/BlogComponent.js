@@ -1,27 +1,10 @@
 import { db } from '../firebase';
-import { useState, useRef, useEffect, useReducer } from "react";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
-
-// function blogsReducer(state,action){
-//   switch(action.type){
-//     case "ADD":
-//       return [action.blog, ...state];
-
-//       case "REMOVE":
-//         return state.filter((blog,index)=> index!==action.index);
-
-//       default :
-//        return[];
-
-//   }
-
-// }
+import { useState, useRef, useEffect } from "react";
+import { collection, addDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
 
 export default function Blog() {
   const [formData, setFormData] = useState({ title: "", content: "" });
   const [blogs, setBlogs] = useState([]);
-  // const[blogs, dispatch] = useReducer(blogsReducer,[] )
-
   const titleRef = useRef(null);
 
   useEffect(() => {
@@ -38,40 +21,7 @@ export default function Blog() {
     }
   }, [blogs]);
 
-  // useEffect(() => {
-  //   getDocs(collection(db, 'blogs'))
-  //     .then((snapshot) => {
-  //       snapshot.docs.forEach((doc) => dispatch({
-  //         type: 'Add',
-  //         data: {
-  //           ...(doc.data()),
-  //           uid: doc.id
-  //         }
-  //       }))
-  //     }).catch((err) => { console.error("Error getting documents:", err) })
-  // }, [])
-
   useEffect(() => {
-
-    // async function fetchData() {
-    //   try {
-    //     const snapshot = await getDocs(collection(db, 'blogs'));
-    //     console.log(snapshot);
-    //     const blogs = snapshot.docs.map((doc) => {
-    //       return {
-    //         id: doc.id,
-    //         ...doc.data()
-    //       }
-    //     });
-    //     setBlogs(blogs);
-    //   }
-    //   catch {
-    //     alert('Failed To Fetch Data');
-    //   }
-
-    // }
-    // fetchData();
-
     const unsub = onSnapshot(collection(db, 'blogs'),(snapShot)=>{
       const blogs = snapShot.docs.map((doc)=>{
         return{
@@ -85,19 +35,9 @@ export default function Blog() {
   }, [])
 
 
-
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // Create a new blog object with the current title and content
-    const newBlog = { title: formData.title, content: formData.content };
-
-    // Use spread operator to add the new blog to the beginning of the array
-    setBlogs([newBlog, ...blogs]);
-    // dispatch({
-    //   type:"Add",
-    //   blog: { title: formData.title, content: formData.content }
-    // })
     const docRef = await addDoc(collection(db, 'blogs'), {
       title: formData.title,
       content: formData.content,
@@ -111,15 +51,13 @@ export default function Blog() {
     titleRef.current.focus()
   }
 
-  function handleRemove(index) {
+  async function handleRemove(id) {
+    // Remove the blog from the Firestore database
+    await deleteDoc(doc(db, 'blogs', id));
     // Create a copy of the blogs array and remove the blog at the specified index
-    const updatedBlogs = [...blogs];
-    updatedBlogs.splice(index, 1);
-    setBlogs(updatedBlogs);
-    // dispatch({
-    //   type:'REMOVE',
-    //   index: index
-    // })
+    // const updatedBlogs = [...blogs];
+    // updatedBlogs.splice(index, 1);
+    // setBlogs(updatedBlogs);
   }
 
   return (
@@ -157,7 +95,7 @@ export default function Blog() {
           <h3>{blog.title}</h3>
           <p>{blog.content}</p>
           <hr />
-          <button className="btn remove" onClick={() => handleRemove(index)}>X</button>
+          <button className="btn remove" onClick={() => handleRemove(blog.id)}>X</button>
         </div>
       ))}
     </>
