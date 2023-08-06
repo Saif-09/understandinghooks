@@ -1,42 +1,42 @@
-import {db} from '../firebase';
+import { db } from '../firebase';
 import { useState, useRef, useEffect, useReducer } from "react";
-import {collection, addDoc, getDocs} from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
 
-function blogsReducer(state,action){
-  switch(action.type){
-    case "ADD":
-      return [action.blog, ...state];
+// function blogsReducer(state,action){
+//   switch(action.type){
+//     case "ADD":
+//       return [action.blog, ...state];
 
-      case "REMOVE":
-        return state.filter((blog,index)=> index!==action.index);
+//       case "REMOVE":
+//         return state.filter((blog,index)=> index!==action.index);
 
-      default :
-       return[];
-      
-  }
+//       default :
+//        return[];
 
-}
+//   }
+
+// }
 
 export default function Blog() {
   const [formData, setFormData] = useState({ title: "", content: "" });
-  // const [blogs, setBlogs] = useState([]);[]
-  const[blogs, dispatch] = useReducer(blogsReducer,[] )
+  const [blogs, setBlogs] = useState([]);
+  // const[blogs, dispatch] = useReducer(blogsReducer,[] )
 
   const titleRef = useRef(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     titleRef.current.focus();
     titleRef.current.style.width = "20vw"
 
-  },[]);
+  }, []);
 
-  useEffect(()=>{
-    if(blogs.length && blogs[0].title){
+  useEffect(() => {
+    if (blogs.length && blogs[0].title) {
       document.title = blogs[0].title
-    }else{
+    } else {
       document.title = "No blogs"
     }
-  },[blogs]);
+  }, [blogs]);
 
   // useEffect(() => {
   //   getDocs(collection(db, 'blogs'))
@@ -53,27 +53,35 @@ export default function Blog() {
 
   useEffect(() => {
 
-    async function fetchData() {
-      try {
-        const snapshot = await getDocs(collection(db, 'blogs'));
-        console.log(snapshot);
-        const blogs = snapshot.docs.map((doc) => {
-          return {
-            id: doc.id,
-            ...doc.data()
-          }
-        });
-        dispatch({
-          type: 'ADD',
-          blog: blogs
-        })
-      }
-      catch {
-        alert('Failed To Fetch Data');
-      }
+    // async function fetchData() {
+    //   try {
+    //     const snapshot = await getDocs(collection(db, 'blogs'));
+    //     console.log(snapshot);
+    //     const blogs = snapshot.docs.map((doc) => {
+    //       return {
+    //         id: doc.id,
+    //         ...doc.data()
+    //       }
+    //     });
+    //     setBlogs(blogs);
+    //   }
+    //   catch {
+    //     alert('Failed To Fetch Data');
+    //   }
 
-    }
-    fetchData();
+    // }
+    // fetchData();
+
+    const unsub = onSnapshot(collection(db, 'blogs'),(snapShot)=>{
+      const blogs = snapShot.docs.map((doc)=>{
+        return{
+          id:doc.id,
+          ...doc.data()
+        }
+      })
+      console.log(blogs);
+      setBlogs(blogs);
+    })
   }, [])
 
 
@@ -82,16 +90,16 @@ export default function Blog() {
     e.preventDefault();
 
     // Create a new blog object with the current title and content
-    // const newBlog = { title: formData.title, content: formData.content };
+    const newBlog = { title: formData.title, content: formData.content };
 
     // Use spread operator to add the new blog to the beginning of the array
-    // setBlogs([newBlog, ...blogs]);
+    setBlogs([newBlog, ...blogs]);
     // dispatch({
     //   type:"Add",
     //   blog: { title: formData.title, content: formData.content }
     // })
-    const docRef = await addDoc(collection(db, 'blogs'),{
-      title :formData.title,
+    const docRef = await addDoc(collection(db, 'blogs'), {
+      title: formData.title,
       content: formData.content,
       createdAt: new Date()
     })
@@ -107,11 +115,11 @@ export default function Blog() {
     // Create a copy of the blogs array and remove the blog at the specified index
     const updatedBlogs = [...blogs];
     updatedBlogs.splice(index, 1);
-    // setBlogs(updatedBlogs);
-    dispatch({
-      type:'REMOVE',
-      index: index
-    })
+    setBlogs(updatedBlogs);
+    // dispatch({
+    //   type:'REMOVE',
+    //   index: index
+    // })
   }
 
   return (
@@ -123,7 +131,7 @@ export default function Blog() {
             <input
               placeholder="Enter the Title here.."
               value={formData.title}
-              ref = {titleRef}
+              ref={titleRef}
               required
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
@@ -169,3 +177,5 @@ function InputField(props) {
     </>
   );
 }
+
+
