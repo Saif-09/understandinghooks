@@ -37,7 +37,7 @@ export default function Blog() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const docRef = await addDoc(collection(db, 'blogs'), {
+    await addDoc(collection(db, 'blogs'), {
       title: formData.title,
       content: formData.content,
       createdAt: new Date()
@@ -55,7 +55,7 @@ export default function Blog() {
 
   return (
     <div className="blog-container">
-      <h1>Write a Blog</h1>
+      <h1 className="font-bold text-[red]" >Write a Blog</h1>
       <div className="section">
         <form onSubmit={handleSubmit}>
           <InputField label="Title">

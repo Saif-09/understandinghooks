@@ -1,11 +1,14 @@
-import Input from "./Components/BlogComponent";
+import Blog from "./Components/BlogComponent";
+import Blogs from "./Components/Blogs";
+import BlogTest from "./Components/BlogTest";
 
 function App() {
   return (
     <>
-      <Input />
+      {/* <Blog /> */}
+      {/* <Blogs /> */}
+      <BlogTest/>
 
-     
     </>
   );
 }
