@@ -2,17 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, onSnapshot, doc, deleteDoc } from "firebase/firestore";
 
-
 export default function BlogTest() {
+    // State to store form data
     const [formData, setFormData] = useState({});
+    
+    // State to store blogs
     const [blogs, setBlogs] = useState([]);
-
+    
+    // Ref to focus on the title input field
     const titleRef = useRef(null);
 
+    // Focus on the title input field when the component mounts
     useEffect(() => {
         titleRef.current.focus();
     }, []);
 
+    // Change the document title based on the first blog's title
     useEffect(() => {
         if (blogs.length && blogs[0].title) {
             document.title = blogs[0].title;
@@ -21,25 +26,25 @@ export default function BlogTest() {
         }
     }, [blogs]);
 
+    // Fetch and display blogs from Firestore
     useEffect(() => {
-        onSnapshot(collection(db, 'blogs'), (snapShot) => {
-            const blogs = snapShot.docs.map((doc) => {
-                return {
-                    id: doc.id,
-                    ...doc.data()
-                };
-            });
-            setBlogs(blogs);
+        const unsubscribe = onSnapshot(collection(db, 'blogs'), (snapShot) => {
+            const blogsData = snapShot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setBlogs(blogsData);
         });
-         
+        
+        return () => unsubscribe(); // Cleanup function to unsubscribe from the snapshot listener
     }, []);
 
+    // Handle form submission
     const handleSubmit = async (e) => {
-
         e.preventDefault();
-        // setBlogs([{ title: formData.title, content: formData.content }, ...blogs]);
-
+        
         try {
+            // Add new blog to Firestore
             const docRef = await addDoc(collection(db, "blogs"), {
                 title: formData.title,
                 content: formData.content,
@@ -49,21 +54,22 @@ export default function BlogTest() {
         } catch (e) {
             console.error("Error adding document: ", e);
         }
+
+        // Clear form data and focus on the title input field
         setFormData({ title: '', content: '' });
         titleRef.current.focus();
     };
 
+    // Handle blog removal
     const handleRemove = async (id) => {
-        // const updatedBlogs = [...blogs];
         await deleteDoc(doc(db, "blogs", id));
-        // setBlogs([...updatedBlogs]);
     };
 
     return (
         <div className='grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-slate-200'>
+            {/* Section to add a new blog */}
             <div className='bg-white rounded-xl shadow-md p-6 h-auto md:min-h-screen'>
                 <h1 className='text-2xl md:text-4xl font-bold text-center mb-6 text-[#161336]'>Add a Blog</h1>
-
                 <form onSubmit={handleSubmit} className='space-y-4'>
                     <Inputs label="Title">
                         <input
@@ -90,8 +96,10 @@ export default function BlogTest() {
                 </form>
             </div>
 
+            {/* Section to display existing blogs */}
             <div className='space-y-4'>
                 <h1 className='text-2xl md:text-4xl font-bold text-center mb-6 text-[#161336]'>Blogs</h1>
+                {/* Display each blog */}
                 {blogs.length > 0 ? (
                     blogs.map((blog, index) => (
                         <div key={index} className='bg-white rounded-lg shadow-md p-4'>
@@ -104,6 +112,7 @@ export default function BlogTest() {
                     ))
                 ) : (
                     <div className='bg-white rounded-lg shadow-md p-4 text-center'>
+                        {/* Display message when there are no blogs */}
                         <p className='text-l font-semibold text-gray-800'>No blogs yet. Add blogs to see here.</p>
                     </div>
                 )}
